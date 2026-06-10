@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中殡网·生态葬服务地图 - 让告别回归大自然</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3A8B7C;
+            --primary-dark: #2D6E62;
+            --primary-light: #5BAE9E;
+            --accent: #E8F5F2;
+            --bg: #F5F7F6;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --text-muted: #999999;
+            --border: #E0E8E5;
+            --shadow: 0 2px 12px rgba(58, 139, 124, 0.1);
+            --shadow-hover: 0 8px 24px rgba(58, 139, 124, 0.18);
+            --radius-sm: 10px;
+            --radius: 16px;
+            --radius-lg: 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .nav-logo img { height: 34px; width: auto; }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 6px 0;
+            position: relative;
+            transition: color 0.25s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: var(--primary);
+            transition: width 0.25s;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white !important;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s;
+            box-shadow: 0 4px 12px rgba(58,139,124,0.2);
+        }
+
+        .nav-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(58,139,124,0.3);
+        }
+
+        /* ===== PAGE SYSTEM ===== */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 60px;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #2D6E62 0%, #3A8B7C 50%, #5BAE9E 100%);
+            color: white;
+            padding: 80px 24px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 20 Q60 40 50 60 Q40 40 50 20' fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: 80px 80px;
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .hero-search {
+            display: flex;
+            max-width: 520px;
+            margin: 0 auto 24px;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        }
+
+        .hero-search input {
+            flex: 1;
+            border: none;
+            padding: 14px 24px;
+            font-size: 14px;
+            outline: none;
+            color: var(--text);
+            min-width: 0;
+        }
+
+        .hero-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .hero-search button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.25s;
+            white-space: nowrap;
+        }
+
+        .hero-search button:hover {
+            background: var(--primary-dark);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat .number {
+            font-size: 32px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .hero-stat .label {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        /* ===== COMPACT FEATURES ===== */
+        .compact-features-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .compact-feature-item {
+            flex: 1;
+            min-width: 150px;
+            max-width: 190px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .compact-feature-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+        }
+
+        .compact-feature-icon {
+            font-size: 26px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .compact-feature-item h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .compact-feature-item p {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        /* ===== DATA TABLE ===== */
+        .data-section { background: white; }
+        .data-table {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 14px 20px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tbody tr { transition: background 0.2s; }
+        .data-table tbody tr:hover { background: linear-gradient(90deg, var(--accent), transparent); }
+
+        /* ===== COMPACT PARTNER ===== */
+        .partner-section { background: white; }
+        .compact-partner-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .compact-partner-card {
+            flex: 1;
+            min-width: 150px;
+            max-width: 190px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            padding: 24px 16px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .compact-partner-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            background: white;
+        }
+
+        .compact-step {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .compact-partner-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+
+        .compact-partner-card p {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        /* ===== METRICS ===== */
+        .metrics-section {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 48px 24px;
+        }
+
+        .metrics-grid {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .metric-item .value {
+            font-size: 36px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .metric-item .label {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        /* ===== VALUE CARDS ===== */
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .value-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .value-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+        }
+
+        .value-card .icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .value-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .value-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* ===== SUBPAGE HERO ===== */
+        .subpage-hero {
+            background: linear-gradient(135deg, #2D6E62, #3A8B7C);
+            color: white;
+            padding: 60px 24px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subpage-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 20 Q60 40 50 60 Q40 40 50 20' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: 60px 60px;
+        }
+
+        .subpage-hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subpage-hero p {
+            font-size: 15px;
+            opacity: 0.9;
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            opacity: 0.85;
+            position: relative;
+            z-index: 1;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .breadcrumb a:hover { color: white; text-decoration: underline; }
+
+        /* ===== MAP PAGE ===== */
+        .map-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin: 24px auto;
+            max-width: 1100px;
+            border: 1px solid var(--border);
+        }
+
+        .map-toolbar {
+            display: flex;
+            gap: 10px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            align-items: center;
+            background: var(--bg);
+        }
+
+        .map-toolbar select, .map-toolbar input {
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            outline: none;
+            background: white;
+            transition: border-color 0.25s;
+            min-width: 120px;
+        }
+
+        .map-toolbar select:focus, .map-toolbar input:focus {
+            border-color: var(--primary);
+        }
+
+        .map-toolbar button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .map-toolbar button:hover {
+            background: var(--primary-dark);
+        }
+
+        .map-visual {
+            height: 380px;
+            background: linear-gradient(180deg, #E8F5F2 0%, #D4EDE7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-visual-inner {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .map-visual-inner svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 16px;
+            padding: 12px 20px;
+            background: var(--bg);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .map-results {
+            padding: 20px;
+        }
+
+        .result-card {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.25s;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+        }
+
+        .result-card:last-child { border-bottom: none; }
+        .result-card:hover { background: linear-gradient(90deg, var(--accent), white); }
+
+        .result-info h4 {
+            font-size: 16px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .result-info p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .result-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .result-tag {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            background: var(--accent);
+            color: var(--primary-dark);
+        }
+
+        .result-tag.subsidy { background: #FFF3E0; color: #E65100; }
+        .result-tag.coop { background: #E8F5E9; color: #2E7D32; }
+
+        /* ===== SEARCH PAGE ===== */
+        .search-filters {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .filter-group {
+            margin-bottom: 16px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: white;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ===== BOOKING ===== */
+        .booking-form {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            max-width: 680px;
+            margin: 24px auto;
+            border: 1px solid var(--border);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+            background: var(--bg);
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(58,139,124,0.1);
+            background: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            width: 100%;
+            box-shadow: 0 4px 16px rgba(58,139,124,0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-dark));
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(58,139,124,0.3);
+        }
+
+        /* ===== KNOWLEDGE CARDS ===== */
+        .knowledge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .knowledge-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .knowledge-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .knowledge-img {
+            height: 160px;
+            background: linear-gradient(135deg, #D4EDE7, #E8F5F2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+        }
+
+        .knowledge-content {
+            padding: 24px;
+        }
+
+        .knowledge-content h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .knowledge-content p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* ===== CEMETERY CARDS ===== */
+        .cemetery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .cemetery-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .cemetery-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .cemetery-img {
+            height: 180px;
+            background: linear-gradient(135deg, #D4EDE7, #E8F5F2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+        }
+
+        .cemetery-info {
+            padding: 24px;
+        }
+
+        .cemetery-info h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .cemetery-info .location {
+            color: var(--text-light);
+            font-size: 13px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .cemetery-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* ===== ACTIVITY CARDS ===== */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .activity-card:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .activity-date {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            padding: 14px 12px;
+            text-align: center;
+            min-width: 70px;
+            flex-shrink: 0;
+        }
+
+        .activity-date .day {
+            font-size: 28px;
+            font-weight: 700;
+            display: block;
+            line-height: 1;
+        }
+
+        .activity-date .month {
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .activity-info { flex: 1; }
+
+        .activity-info h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .activity-info p {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .activity-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #263633;
+            color: rgba(255,255,255,0.8);
+            padding: 48px 24px 28px;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand img {
+            height: 30px;
+            margin-bottom: 16px;
+            filter: brightness(0) invert(1);
+        }
+
+        .footer-brand p {
+            font-size: 13px;
+            line-height: 1.8;
+            opacity: 0.75;
+        }
+
+        .footer-links h4 {
+            color: white;
+            font-size: 15px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            font-size: 13px;
+            cursor: pointer;
+            transition: color 0.25s;
+        }
+
+        .footer-links a:hover { color: var(--primary-light); }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 36px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        /* ===== MODAL ===== */
+        #detailModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 620px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            animation: modalIn 0.3s ease;
+        }
+
+        .modal-body { padding: 32px 30px 24px; }
+        .modal-footer {
+            padding: 0 30px 24px;
+            text-align: right;
+        }
+
+        .modal-footer button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .modal-star { color: #F4A623; font-size: 14px; }
+        .modal-section { margin-bottom: 16px; }
+        .modal-section h4 { font-size: 15px; color: var(--primary-dark); margin-bottom: 8px; font-weight: 600; }
+        .modal-section p { font-size: 14px; color: var(--text-light); line-height: 1.8; }
+        .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .modal-tag { padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+        .modal-tag.green { background: #E8F5E9; color: #2E7D32; }
+        .modal-tag.blue { background: #E3F2FD; color: #1565C0; }
+        .modal-tag.orange { background: #FFF3E0; color: #E65100; }
+        .modal-tag.purple { background: #F3E5F5; color: #6A1B9A; }
+        .modal-price { font-size: 24px; font-weight: 700; color: var(--primary); }
+        .modal-price small { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+        .modal-contact-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            margin-top: 8px;
+            transition: all 0.25s;
+            text-decoration: none;
+        }
+        .modal-contact-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(58,139,124,0.3);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .footer-content { grid-template-columns: 1fr 1fr; }
+            .cemetery-grid, .knowledge-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 14px; }
+            .hero-search { flex-direction: column; border-radius: 16px; max-width: 100%; }
+            .hero-search button { border-radius: 0; }
+            .hero-stats { gap: 24px; flex-wrap: wrap; }
+            .hero-stat .number { font-size: 24px; }
+            .section { padding: 40px 16px; }
+            .section-title h2 { font-size: 24px; }
+            .form-row { grid-template-columns: 1fr; }
+            .activity-card { flex-direction: column; }
+            .compact-features-row, .compact-partner-row { gap: 12px; }
+            .compact-feature-item, .compact-partner-card { flex: 1 1 44%; min-width: 140px; max-width: none; }
+            .metrics-grid { gap: 24px; }
+            .footer-content { grid-template-columns: 1fr; gap: 28px; }
+            .booking-form { padding: 28px 20px; }
+            .search-filters { padding: 20px 16px; }
+            .map-visual { height: 280px; }
+            .value-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .compact-features-row, .compact-partner-row { flex-direction: column; }
+            .compact-feature-item, .compact-partner-card { flex: 1 1 auto; min-width: auto; max-width: none; }
+            .hero h1 { font-size: 24px; }
+            .hero-stats { gap: 16px; }
+            .section-title h2 { font-size: 22px; }
+            .cemetery-img { height: 140px; font-size: 48px; }
+            .knowledge-img { height: 120px; font-size: 48px; }
+            .modal-content { margin: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo" onclick="navigateTo('home')">
+            <img src="images/logo.png" alt="中殡网">
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="navigateTo('home')" data-page="home" class="active">首页</a></li>
+            <li><a onclick="navigateTo('map')" data-page="map">生态葬地图</a></li>
+            <li><a onclick="navigateTo('search')" data-page="search">查询服务</a></li>
+            <li><a onclick="navigateTo('policy')" data-page="policy">惠民政策</a></li>
+            <li><a onclick="navigateTo('knowledge')" data-page="knowledge">知识科普</a></li>
+            <li><a onclick="navigateTo('partners')" data-page="partners">合作陵园</a></li>
+            <li><a onclick="navigateTo('activities')" data-page="activities">公益活动</a></li>
+        </ul>
+        <button class="nav-cta" onclick="navigateTo('booking')">预约咨询</button>
+    </div>
+</nav>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>生态葬服务地图</h1>
+            <p>建设中国生态葬服务地图，整合全国节地生态安葬资源<br>为群众提供树葬、花坛葬、草坪葬、海葬等绿色安葬服务的查询、咨询与预约</p>
+            <div class="hero-search">
+                <input type="text" placeholder="搜索城市、安葬方式或机构名称..." id="heroSearchInput" onkeydown="if(event.key==='Enter')searchFromHero()">
+                <button onclick="searchFromHero()">🔍 搜索服务</button>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="number" id="statCities">186</span>
+                    <span class="label">覆盖城市</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number" id="statServices">2,847</span>
+                    <span class="label">服务点</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number" id="statPartners">156</span>
+                    <span class="label">合作机构</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number" id="statFamilies">12,580</span>
+                    <span class="label">服务家庭</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section features-section">
+        <div class="section-title">
+            <h2>四大服务层级</h2>
+            <p>从信息查询到服务落地，全程专业陪伴</p>
+        </div>
+        <div class="compact-features-row">
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">🔎</span>
+                <h4>查询层</h4>
+                <p>多维度精准查询</p>
+            </div>
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">🗺️</span>
+                <h4>地图层</h4>
+                <p>可视化展示服务点位</p>
+            </div>
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">📝</span>
+                <h4>预约层</h4>
+                <p>在线提交预约需求</p>
+            </div>
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">💬</span>
+                <h4>咨询层</h4>
+                <p>专业顾问一对一服务</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Fields -->
+    <section class="section data-section">
+        <div class="section-title">
+            <h2>服务点信息标准</h2>
+            <p>每个生态葬服务点建立完整信息档案</p>
+        </div>
+        <div class="data-table">
+            <table>
+                <thead>
+                    <tr><th>信息字段</th><th>说明</th><th>示例</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>城市/区县</strong></td><td>服务点所在行政区划</td><td>北京市/海淀区</td></tr>
+                    <tr><td><strong>服务机构名称</strong></td><td>陵园或服务机构全称</td><td>北京市长青园骨灰林基地</td></tr>
+                    <tr><td><strong>生态葬类型</strong></td><td>树葬、花坛葬、草坪葬、海葬等</td><td>花坛葬、树葬</td></tr>
+                    <tr><td><strong>是否节地生态葬项目</strong></td><td>是否经民政部门认定</td><td>是</td></tr>
+                    <tr><td><strong>是否有政府补贴</strong></td><td>是否享受财政补贴政策</td><td>是，补贴5000元</td></tr>
+                    <tr><td><strong>参考价格区间</strong></td><td>服务费用的价格范围</td><td>3000-8000元</td></tr>
+                    <tr><td><strong>服务流程</strong></td><td>预约、办理、安葬等流程说明</td><td>预约→审核→签约→安葬</td></tr>
+                    <tr><td><strong>预约条件</strong></td><td>户籍、年龄等要求</td><td>本市户籍或持有居住证</td></tr>
+                    <tr><td><strong>开放时间</strong></td><td>服务点开放时段</td><td>全年开放，需提前预约</td></tr>
+                    <tr><td><strong>合作状态</strong></td><td>已合作、待合作、公益推荐</td><td>已合作</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Partner Program -->
+    <section class="section partner-section">
+        <div class="section-title">
+            <h2>城市合伙人参与方式</h2>
+            <p>成为城市合伙人，共建本地生态葬服务网络</p>
+        </div>
+        <div class="compact-partner-row">
+            <div class="compact-partner-card">
+                <div class="compact-step">1</div>
+                <h4>政策调研</h4>
+                <p>调研本地生态葬政策和补贴政策</p>
+            </div>
+            <div class="compact-partner-card">
+                <div class="compact-step">2</div>
+                <h4>资源对接</h4>
+                <p>对接陵园、墓园、海葬机构</p>
+            </div>
+            <div class="compact-partner-card">
+                <div class="compact-step">3</div>
+                <h4>数据录入</h4>
+                <p>建立本地生态葬资源库</p>
+            </div>
+            <div class="compact-partner-card">
+                <div class="compact-step">4</div>
+                <h4>推广运营</h4>
+                <p>组织公益活动与用户承接</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics -->
+    <section class="metrics-section">
+        <div class="metrics-grid">
+            <div class="metric-item"><span class="value">156+</span><span class="label">合作机构</span></div>
+            <div class="metric-item"><span class="value">2,847</span><span class="label">服务点录入</span></div>
+            <div class="metric-item"><span class="value">8,920</span><span class="label">月咨询量</span></div>
+            <div class="metric-item"><span class="value">3,450</span><span class="label">预约转化量</span></div>
+            <div class="metric-item"><span class="value">12,580</span><span class="label">服务家庭</span></div>
+        </div>
+    </section>
+
+    <!-- Business Value -->
+    <section class="section">
+        <div class="section-title">
+            <h2>核心价值</h2>
+            <p>生态葬地图带来的多维价值</p>
+        </div>
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="icon">🏛️</div>
+                <h3>政策价值</h3>
+                <p>完全符合节地生态安葬、绿色殡葬、惠民殡葬的国家政策方向，响应民政部关于推进殡葬改革的号召，助力生态文明建设。</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">🌐</div>
+                <h3>流量价值</h3>
+                <p>用户主动搜索"树葬多少钱""海葬怎么申请"等高意向问题，精准锁定有实际需求的用户群体，形成持续稳定的自然流量入口。</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">🤝</div>
+                <h3>合作价值</h3>
+                <p>连接民政部门、陵园机构、公益组织和城市合伙人，构建完整的生态葬服务生态网络，实现多方共赢的合作模式。</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ===== MAP PAGE ===== -->
+<div id="page-map" class="page">
+    <section class="subpage-hero">
+        <div class="breadcrumb"><a onclick="navigateTo('home')">首页</a><span>/</span><span>生态葬地图</span></div>
+        <h1>全国生态葬服务地图</h1>
+        <p>可视化展示全国生态葬服务点位，点击查看详情</p>
+    </section>
+
+    <div class="section" style="padding-top:24px;">
+        <div class="map-container">
+            <div class="map-toolbar">
+                <select id="mapCity"><option value="">选择城市</option><option value="北京">北京市</option><option value="上海">上海市</option><option value="广州">广州市</option><option value="深圳">深圳市</option><option value="杭州">杭州市</option><option value="南京">南京市</option><option value="成都">成都市</option><option value="武汉">武汉市</option></select>
+                <select id="mapType"><option value="">安葬方式</option><option value="树葬">树葬</option><option value="花坛葬">花坛葬</option><option value="草坪葬">草坪葬</option><option value="海葬">海葬</option><option value="骨灰撒散">骨灰撒散</option></select>
+                <select id="mapSubsidy"><option value="">政府补贴</option><option value="yes">有补贴</option><option value="no">无补贴</option></select>
+                <input type="text" placeholder="搜索机构名称" style="min-width:160px;">
+                <button onclick="filterMap()">筛选</button>
+                <button onclick="resetMap()" style="background:var(--text-light);">重置</button>
+            </div>
+
+            <div class="map-visual">
+                <div class="map-visual-inner">
+                    <svg width="560" height="340" viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M120,80 L140,60 L180,55 L220,50 L260,45 L300,40 L340,42 L380,48 L420,55 L460,65 L490,80 L500,100 L510,120 L505,140 L495,160 L480,180 L470,200 L460,220 L450,240 L440,260 L430,280 L420,300 L400,310 L380,315 L360,320 L340,325 L320,330 L300,335 L280,338 L260,340 L240,342 L220,340 L200,338 L180,335 L160,330 L140,320 L120,300 L100,280 L90,260 L85,240 L80,220 L78,200 L80,180 L85,160 L90,140 L95,120 L100,100 L110,90 Z" fill="#C8E6E0" stroke="#3A8B7C" stroke-width="1.5"/>
+                        <circle cx="280" cy="70" r="5" fill="#FF6B6B" stroke="white" stroke-width="2" data-city="beijing"/>
+                        <circle cx="340" cy="130" r="5" fill="#FF6B6B" stroke="white" stroke-width="2" data-city="shanghai"/>
+                        <circle cx="260" cy="250" r="5" fill="#4ECDC4" stroke="white" stroke-width="2" data-city="guangzhou"/>
+                        <circle cx="250" cy="260" r="4" fill="#4ECDC4" stroke="white" stroke-width="2" data-city="shenzhen"/>
+                        <circle cx="330" cy="145" r="4" fill="#45B7D1" stroke="white" stroke-width="2" data-city="hangzhou"/>
+                        <circle cx="310" cy="135" r="4" fill="#45B7D1" stroke="white" stroke-width="2" data-city="nanjing"/>
+                        <circle cx="200" cy="180" r="4" fill="#96CEB4" stroke="white" stroke-width="2" data-city="chengdu"/>
+                        <circle cx="270" cy="160" r="4" fill="#96CEB4" stroke="white" stroke-width="2" data-city="wuhan"/>
+                        <text x="280" y="55" text-anchor="middle" font-size="10" fill="#333" font-weight="600">北京</text>
+                        <text x="340" y="148" text-anchor="middle" font-size="10" fill="#333" font-weight="600">上海</text>
+                        <text x="260" y="268" text-anchor="middle" font-size="10" fill="#333" font-weight="600">广州</text>
+                        <text x="330" y="162" text-anchor="middle" font-size="10" fill="#333" font-weight="600">杭州</text>
+                        <text x="200" y="196" text-anchor="middle" font-size="10" fill="#333" font-weight="600">成都</text>
+                    </svg>
+                    <p style="margin-top:10px;color:var(--text-light);font-size:13px;">点击地图标记查看服务点详情</p>
+                </div>
+            </div>
+
+            <div class="map-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#FF6B6B"></div>树葬</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#4ECDC4"></div>花坛葬</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#45B7D1"></div>草坪葬</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#96CEB4"></div>海葬</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#3A8B7C"></div>公益推荐</div>
+            </div>
+
+            <div class="map-results" id="mapResults">
+                <h3 style="margin-bottom:12px;font-size:16px;">服务点列表</h3>
+                <div class="result-card" onclick="showCemeteryDetail('北京市长青园骨灰林基地')">
+                    <div class="result-info" style="flex:1">
+                        <h4>北京市长青园骨灰林基地</h4>
+                        <p>📍 北京市朝阳区黑庄户乡 | 📞 13236507829</p>
+                        <div class="result-tags"><span class="result-tag">树葬</span><span class="result-tag">花坛葬</span><span class="result-tag subsidy">补贴5000元</span><span class="result-tag coop">已合作</span></div>
+                    </div>
+                    <button class="nav-cta" style="align-self:center;flex-shrink:0;" onclick="event.stopPropagation();navigateTo('booking')">预约</button>
+                </div>
+                <div class="result-card" onclick="showCemeteryDetail('北京市八宝山革命公墓')">
+                    <div class="result-info" style="flex:1">
+                        <h4>北京市八宝山革命公墓</h4>
+                        <p>📍 北京市石景山区 | 📞 13236507829</p>
+                        <div class="result-tags"><span class="result-tag">草坪葬</span><span class="result-tag">骨灰撒散</span><span class="result-tag subsidy">补贴3000元</span><span class="result-tag coop">已合作</span></div>
+                    </div>
+                    <button class="nav-cta" style="align-self:center;flex-shrink:0;" onclick="event.stopPropagation();navigateTo('booking')">预约</button>
+                </div>
+                <div class="result-card" onclick="showCemeteryDetail('北京海葬服务中心')">
+                    <div class="result-info" style="flex:1">
+                        <h4>北京海葬服务中心</h4>
+                        <p>📍 北京市海淀区四季青镇 | 📞 13236507829</p>
+                        <div class="result-tags"><span class="result-tag">海葬</span><span class="result-tag subsidy">免费集体海葬</span><span class="result-tag coop">公益推荐</span></div>
+                    </div>
+                    <button class="nav-cta" style="align-self:center;flex-shrink:0;" onclick="event.stopPropagation();navigateTo('booking')">预约</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SEARCH PAGE ===== -->
+<div id="page-search" class="page">
+    <section class="subpage-hero">
+        <div class="breadcrumb"><a onclick="navigateTo('home')">首页</a><span>/</span><span>查询服务</span></div>
+        <h1>生态葬服务查询</h1>
+        <p>按城市、安葬方式、价格、补贴等多维度精准查询</p>
+    </section>
+
+    <div class="section" style="padding-top:24px;">
+        <div class="search-filters">
+            <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;">
+                <input type="text" id="searchPageInput" placeholder="输入城市、安葬方式或机构名称..." style="flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;outline:none;transition:border-color 0.25s;" onkeydown="if(event.key==='Enter')performSearch()" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+                <button class="submit-btn" style="width:auto;padding:12px 28px;white-space:nowrap;" onclick="performSearch()">🔍 搜索</button>
+            </div>
+            <div class="filter-group">
+                <label>选择城市</label>
+                <div class="filter-options" id="filterCity">
+                    <button class="filter-chip active" data-value="">全部</button>
+                    <button class="filter-chip" data-value="北京">北京</button>
+                    <button class="filter-chip" data-value="上海">上海</button>
+                    <button class="filter-chip" data-value="广州">广州</button>
+                    <button class="filter-chip" data-value="深圳">深圳</button>
+                    <button class="filter-chip" data-value="杭州">杭州</button>
+                    <button class="filter-chip" data-value="南京">南京</button>
+                    <button class="filter-chip" data-value="成都">成都</button>
+                    <button class="filter-chip" data-value="武汉">武汉</button>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>安葬方式</label>
+                <div class="filter-options" id="filterType">
+                    <button class="filter-chip active" data-value="">全部</button>
+                    <button class="filter-chip" data-value="树葬">树葬</button>
+                    <button class="filter-chip" data-value="花坛葬">花坛葬</button>
+                    <button class="filter-chip" data-value="草坪葬">草坪葬</button>
+                    <button class="filter-chip" data-value="海葬">海葬</button>
+                    <button class="filter-chip" data-value="骨灰撒散">骨灰撒散</button>
+                    <button class="filter-chip" data-value="壁葬">壁葬</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="searchResults"></div>
+    </div>
+</div>
+
+<!-- ===== POLICY PAGE ===== -->
+<div id="page-policy" class="page">
+    <section class="subpage-hero">
+        <div class="breadcrumb"><a onclick="navigateTo('home')">首页</a><span>/</span><span>惠民补贴政策</span></div>
+        <h1>惠民补贴政策查询</h1>
+        <p>全国各地生态葬补贴政策汇总，助您了解权益</p>
+    </section>
+
+    <div class="section">
+        <div class="section-title">
+            <h2>重点城市补贴政策</h2>
+            <p>节地生态安葬财政补贴标准一览（点击城市查看详情）</p>
+        </div>
+
+        <div class="data-table">
+            <table>
+                <thead>
+                    <tr><th>城市</th><th>生态葬类型</th><th>补贴金额</th><th>适用对象</th><th>申请条件</th><th>政策依据</th></tr>
+                </thead>
+                <tbody>
+                    <tr onclick="showPolicyDetail('北京市')" style="cursor:pointer">
+                        <td><strong>北京市</strong></td><td>树葬、花坛葬、草坪葬</td><td><span style="color:var(--primary);font-weight:600;">5,000元</span></td><td>本市户籍居民</td><td>选择节地生态安葬方式</td><td>京民殡发〔2017〕XX号</td>
+                    </tr>
+                    <tr onclick="showPolicyDetail('上海市')" style="cursor:pointer">
+                        <td><strong>上海市</strong></td><td>海葬</td><td><span style="color:var(--primary);font-weight:600;">免费+补贴</span></td><td>本市户籍居民</td><td>参加政府组织的海葬活动</td><td>沪民殡发〔2020〕XX号</td>
+                    </tr>
+                    <tr onclick="showPolicyDetail('广州市')" style="cursor:pointer">
+                        <td><strong>广州市</strong></td><td>海葬、树葬</td><td><span style="color:var(--primary);font-weight:600;">2,000元</span></td><td>本市户籍居民</td><td>选择指定生态葬方式</td><td>穗民规字〔2019〕XX号</td>
+                    </tr>
+                    <tr onclick="showPolicyDetail('深圳市')" style="cursor:pointer">
+                        <td><strong>深圳市</strong></td><td>花坛葬、草坪葬、树葬</td><td><span style="color:var(--primary);font-weight:600;">3,000元</span></td><td>本市户籍居民</td><td>在指定陵园选择生态葬</td><td>深民〔2021〕XX号</td>
+                    </tr>
+                    <tr onclick="showPolicyDetail('杭州市')" style="cursor:pointer">
+                        <td><strong>杭州市</strong></td><td>生态葬（各类）</td><td><span style="color:var(--primary);font-weight:600;">2,000-5,000元</span></td><td>本市户籍居民</td><td>根据安葬方式不同补贴</td><td>杭民发〔2018〕XX号</td>
+                    </tr>
+                    <tr onclick="showPolicyDetail('南京市')" style="cursor:pointer">
+                        <td><strong>南京市</strong></td><td>花坛葬、草坪葬、壁葬</td><td><span style="color:var(--primary);font-weight:600;">1,500元</span></td><td>本市户籍居民</td><td>在指定机构办理</td><td>宁民殡〔2020〕XX号</td>
+                    </tr>
+                    <tr onclick="showPolicyDetail('成都市')" style="cursor:pointer">
+                        <td><strong>成都市</strong></td><td>树葬、花坛葬、草坪葬</td><td><span style="color:var(--primary);font-weight:600;">1,000-3,000元</span></td><td>本市户籍居民</td><td>选择节地生态安葬</td><td>成民发〔2019〕XX号</td>
+                    </tr>
+                    <tr onclick="showPolicyDetail('武汉市')" style="cursor:pointer">
+                        <td><strong>武汉市</strong></td><td>生态葬（各类）</td><td><span style="color:var(--primary);font-weight:600;">1,000-2,000元</span></td><td>本市户籍居民</td><td>在指定陵园办理</td><td>武民政〔2020〕XX号</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-title" style="margin-top:48px;">
+            <h2>补贴申请流程</h2>
+            <p>四步完成生态葬补贴申请</p>
+        </div>
+
+        <div class="compact-features-row" style="max-width:800px;margin:0 auto;">
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">1️⃣</span>
+                <h4>选择服务</h4>
+                <p>查询选择符合条件机构</p>
+            </div>
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">2️⃣</span>
+                <h4>提交材料</h4>
+                <p>准备身份户籍等材料</p>
+            </div>
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">3️⃣</span>
+                <h4>审核办理</h4>
+                <p>民政部门审核办理手续</p>
+            </div>
+            <div class="compact-feature-item">
+                <span class="compact-feature-icon">4️⃣</span>
+                <h4>领取补贴</h4>
+                <p>补贴发放至指定账户</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== BOOKING PAGE ===== -->
+<div id="page-booking" class="page">
+    <section class="subpage-hero">
+        <div class="breadcrumb"><a onclick="navigateTo('home')">首页</a><span>/</span><span>在线预约咨询</span></div>
+        <h1>在线预约咨询</h1>
+        <p>填写您的需求，专业顾问将为您提供一对一服务方案</p>
+    </section>
+
+    <div class="section" style="padding-top:24px;">
+        <div class="booking-form">
+            <h2 style="text-align:center;margin-bottom:28px;color:var(--primary-dark);">预约咨询表单</h2>
+            <form onsubmit="submitBooking(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>您的姓名 *</label><input type="text" placeholder="请输入您的姓名" required></div>
+                    <div class="form-group"><label>联系电话 *</label><input type="tel" placeholder="请输入手机号码" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>意向城市 *</label><select required><option value="">请选择城市</option><option>北京市</option><option>上海市</option><option>广州市</option><option>深圳市</option><option>杭州市</option><option>南京市</option><option>成都市</option><option>武汉市</option><option>其他城市</option></select></div>
+                    <div class="form-group"><label>生态葬类型 *</label><select required><option value="">请选择安葬方式</option><option>树葬</option><option>花坛葬</option><option>草坪葬</option><option>海葬</option><option>骨灰撒散</option><option>壁葬</option><option>不确定，需要咨询</option></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>预算范围</label><select><option value="">请选择预算</option><option>免费/公益</option><option>5,000元以下</option><option>5,000-10,000元</option><option>10,000-20,000元</option><option>20,000元以上</option><option>不确定</option></select></div>
+                    <div class="form-group"><label>预计时间</label><select><option value="">请选择时间</option><option>1个月内</option><option>1-3个月</option><option>3-6个月</option><option>6个月以上</option><option>提前了解</option></select></div>
+                </div>
+                <div class="form-group"><label>家庭情况说明</label><textarea placeholder="请简要说明家庭情况，如户籍、人数、特殊需求等"></textarea></div>
+                <div class="form-group"><label>补充说明</label><textarea placeholder="如有其他需求或疑问，请在此补充说明"></textarea></div>
+                <button type="submit" class="submit-btn">提交预约申请</button>
+                <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);">提交后，白管家或城市生命服务中心顾问将在24小时内与您联系</p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ===== KNOWLEDGE PAGE ===== -->
+<div id="page-knowledge" class="page">
+    <section class="subpage-hero">
+        <div class="breadcrumb"><a onclick="navigateTo('home')">首页</a><span>/</span><span>生态葬知识科普</span></div>
+        <h1>生态葬知识科普</h1>
+        <p>了解生态葬的意义、方式与流程，让告别回归大自然</p>
+    </section>
+
+    <div class="section">
+        <div class="section-title">
+            <h2>生态葬方式介绍</h2>
+            <p>六种主要生态葬方式（点击卡片查看详细介绍）</p>
+        </div>
+        <div class="knowledge-grid">
+            <div class="knowledge-card" onclick="showKnowledgeDetail('树葬')">
+                <div class="knowledge-img">🌳</div>
+                <div class="knowledge-content"><h3>树葬</h3><p>将骨灰埋于树下，以树为碑，让生命回归自然。树葬不建墓碑，节约土地，绿化环境，寓意生命延续。</p><div class="result-tags" style="margin-top:10px;"><span class="result-tag">节地环保</span><span class="result-tag">生命延续</span></div></div>
+            </div>
+            <div class="knowledge-card" onclick="showKnowledgeDetail('花坛葬')">
+                <div class="knowledge-img">🌸</div>
+                <div class="knowledge-content"><h3>花坛葬</h3><p>骨灰安葬于花坛之下，上面种植花卉，四季花开不断。花坛葬美观雅致，是一种充满诗意的安葬方式。</p><div class="result-tags" style="margin-top:10px;"><span class="result-tag">美观雅致</span><span class="result-tag">四季花开</span></div></div>
+            </div>
+            <div class="knowledge-card" onclick="showKnowledgeDetail('草坪葬')">
+                <div class="knowledge-img">🌿</div>
+                <div class="knowledge-content"><h3>草坪葬</h3><p>骨灰埋入草坪之下，地面铺设卧碑或不留标记。草坪葬与绿地融为一体，体现"入土为安"的传统理念。</p><div class="result-tags" style="margin-top:10px;"><span class="result-tag">宁静开阔</span><span class="result-tag">传统融合</span></div></div>
+            </div>
+            <div class="knowledge-card" onclick="showKnowledgeDetail('海葬')">
+                <div class="knowledge-img">🌊</div>
+                <div class="knowledge-content"><h3>海葬</h3><p>将骨灰撒入大海，让逝者回归自然的怀抱。海葬彻底不占地，是最节地的安葬方式。各地政府多提供免费集体海葬服务。</p><div class="result-tags" style="margin-top:10px;"><span class="result-tag">彻底节地</span><span class="result-tag">政府免费</span></div></div>
+            </div>
+            <div class="knowledge-card" onclick="showKnowledgeDetail('骨灰撒散')">
+                <div class="knowledge-img">🍃</div>
+                <div class="knowledge-content"><h3>骨灰撒散</h3><p>在指定区域将骨灰自然撒散，不设任何标记。这是最简朴的安葬方式，体现"尘归尘，土归土"的自然理念。</p><div class="result-tags" style="margin-top:10px;"><span class="result-tag">简朴自然</span><span class="result-tag">回归本真</span></div></div>
+            </div>
+            <div class="knowledge-card" onclick="showKnowledgeDetail('壁葬')">
+                <div class="knowledge-img">🏔️</div>
+                <div class="knowledge-content"><h3>壁葬</h3><p>将骨灰安放于墙壁格位中，节约土地资源。壁葬空间利用率高，环境整洁，便于祭扫，是现代城市常见的节地安葬方式。</p><div class="result-tags" style="margin-top:10px;"><span class="result-tag">空间高效</span><span class="result-tag">便于祭扫</span></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="background:white;">
+        <div class="section-title"><h2>常见问题解答</h2><p>关于生态葬的常见疑问解答</p></div>
+        <div style="max-width:720px;margin:0 auto;">
+            <div style="border-bottom:1px solid var(--border);padding:18px 0;"><h4 style="margin-bottom:8px;color:var(--primary-dark);">Q: 生态葬与传统墓葬有什么区别？</h4><p style="color:var(--text-light);font-size:14px;line-height:1.8;">生态葬最大的特点是不建墓碑或只建小型卧碑，大大节约了土地资源。同时，生态葬强调与自然环境融为一体，以树、花、草等自然元素纪念逝者，更加环保和可持续。</p></div>
+            <div style="border-bottom:1px solid var(--border);padding:18px 0;"><h4 style="margin-bottom:8px;color:var(--primary-dark);">Q: 生态葬的费用一般是多少？</h4><p style="color:var(--text-light);font-size:14px;line-height:1.8;">生态葬费用因城市和安葬方式不同而异。政府组织的免费集体海葬不收费；树葬、花坛葬、草坪葬的价格通常在2,000-15,000元之间，比传统墓葬便宜很多。部分地区还有政府补贴。</p></div>
+            <div style="border-bottom:1px solid var(--border);padding:18px 0;"><h4 style="margin-bottom:8px;color:var(--primary-dark);">Q: 如何申请生态葬补贴？</h4><p style="color:var(--text-light);font-size:14px;line-height:1.8;">申请补贴一般需要提供：逝者身份证明、户籍证明、死亡证明、安葬协议等材料。具体流程和材料要求各地不同，建议通过本平台预约咨询，由专业人员指导办理。</p></div>
+            <div style="border-bottom:1px solid var(--border);padding:18px 0;"><h4 style="margin-bottom:8px;color:var(--primary-dark);">Q: 生态葬后如何祭扫？</h4><p style="color:var(--text-light);font-size:14px;line-height:1.8;">生态葬的祭扫方式更加环保。树葬可在树下献花；花坛葬可在花坛边缅怀；海葬可在海边或网上纪念。许多陵园还提供网上祭扫、鲜花代祭等服务。</p></div>
+            <div style="padding:18px 0;"><h4 style="margin-bottom:8px;color:var(--primary-dark);">Q: 非本地户籍可以享受生态葬服务吗？</h4><p style="color:var(--text-light);font-size:14px;line-height:1.8;">大部分生态葬服务不限户籍，但政府补贴通常只面向本地户籍居民。非本地户籍居民可以选择付费生态葬服务，费用仍然比传统墓葬经济很多。</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== PARTNERS PAGE ===== -->
+<div id="page-partners" class="page">
+    <section class="subpage-hero">
+        <div class="breadcrumb"><a onclick="navigateTo('home')">首页</a><span>/</span><span>合作陵园展示</span></div>
+        <h1>合作陵园展示</h1>
+        <p>严选优质生态葬服务机构，为您提供安心服务</p>
+    </section>
+
+    <div class="section">
+        <div class="section-title"><h2>精选合作机构</h2><p>已审核认证的优质生态葬服务机构（点击卡片查看详情）</p></div>
+        <div class="cemetery-grid">
+            <div class="cemetery-card" onclick="showCemeteryDetail('北京市长青园骨灰林基地')">
+                <div class="cemetery-img">🌳</div>
+                <div class="cemetery-info"><h3>北京市长青园骨灰林基地</h3><p class="location">📍 北京市朝阳区黑庄户乡</p><p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">北京市首家生态葬示范基地，环境优美，服务专业。</p><div class="result-tags"><span class="result-tag">树葬</span><span class="result-tag">花坛葬</span><span class="result-tag coop">已合作</span></div><div class="cemetery-meta" style="margin-top:10px;"><span>⭐ 4.8分</span><span>💬 126条评价</span><span>👥 328人咨询</span></div></div>
+            </div>
+            <div class="cemetery-card" onclick="showCemeteryDetail('上海福寿园海港陵园')">
+                <div class="cemetery-img">🌸</div>
+                <div class="cemetery-info"><h3>上海福寿园海港陵园</h3><p class="location">📍 上海市浦东新区书院镇</p><p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">花园式生态陵园，四季花开不断，提供多样化服务。</p><div class="result-tags"><span class="result-tag">花坛葬</span><span class="result-tag">草坪葬</span><span class="result-tag coop">已合作</span></div><div class="cemetery-meta" style="margin-top:10px;"><span>⭐ 4.9分</span><span>💬 98条评价</span><span>👥 256人咨询</span></div></div>
+            </div>
+            <div class="cemetery-card" onclick="showCemeteryDetail('广州市骨灰海葬服务中心')">
+                <div class="cemetery-img">🌊</div>
+                <div class="cemetery-info"><h3>广州市骨灰海葬服务中心</h3><p class="location">📍 广州市南沙区龙穴岛</p><p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">广州市民政局直属海葬服务机构，每年组织多批次活动。</p><div class="result-tags"><span class="result-tag">海葬</span><span class="result-tag subsidy">免费服务</span><span class="result-tag coop">公益推荐</span></div><div class="cemetery-meta" style="margin-top:10px;"><span>⭐ 4.7分</span><span>💬 156条评价</span><span>👥 189人咨询</span></div></div>
+            </div>
+            <div class="cemetery-card" onclick="showCemeteryDetail('深圳市大鹏湾华侨公墓')">
+                <div class="cemetery-img">🌿</div>
+                <div class="cemetery-info"><h3>深圳市大鹏湾华侨公墓</h3><p class="location">📍 深圳市盐田区梅沙街道</p><p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">依山傍海，风景秀丽，提供多种节地生态安葬选择。</p><div class="result-tags"><span class="result-tag">草坪葬</span><span class="result-tag">树葬</span><span class="result-tag coop">已合作</span></div><div class="cemetery-meta" style="margin-top:10px;"><span>⭐ 4.6分</span><span>💬 87条评价</span><span>👥 145人咨询</span></div></div>
+            </div>
+            <div class="cemetery-card" onclick="showCemeteryDetail('杭州市南山陵园')">
+                <div class="cemetery-img">🏔️</div>
+                <div class="cemetery-info"><h3>杭州市南山陵园</h3><p class="location">📍 杭州市西湖区南山路</p><p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">位于西湖风景区内，环境优雅，历史悠久的生态陵园。</p><div class="result-tags"><span class="result-tag">树葬</span><span class="result-tag">壁葬</span><span class="result-tag coop">已合作</span></div><div class="cemetery-meta" style="margin-top:10px;"><span>⭐ 4.8分</span><span>💬 112条评价</span><span>👥 198人咨询</span></div></div>
+            </div>
+            <div class="cemetery-card" onclick="showCemeteryDetail('南京市雨花台功德园')">
+                <div class="cemetery-img">🍃</div>
+                <div class="cemetery-info"><h3>南京市雨花台功德园</h3><p class="location">📍 南京市雨花台区雨花西路</p><p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">历史悠久的现代陵园，交通便利，提供生态葬服务。</p><div class="result-tags"><span class="result-tag">花坛葬</span><span class="result-tag">草坪葬</span><span class="result-tag coop">已合作</span></div><div class="cemetery-meta" style="margin-top:10px;"><span>⭐ 4.5分</span><span>💬 76条评价</span><span>👥 167人咨询</span></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== ACTIVITIES PAGE ===== -->
+<div id="page-activities" class="page">
+    <section class="subpage-hero">
+        <div class="breadcrumb"><a onclick="navigateTo('home')">首页</a><span>/</span><span>公益活动报名</span></div>
+        <h1>公益活动报名</h1>
+        <p>参与生态葬公益宣传，传播绿色殡葬理念</p>
+    </section>
+
+    <div class="section">
+        <div class="section-title"><h2>近期公益活动</h2><p>报名参加即将举行的生态葬公益活动（点击查看详情）</p></div>
+        <div class="activity-list">
+            <div class="activity-card" onclick="showActivityDetail('北京市集体海葬仪式')">
+                <div class="activity-date"><span class="day">15</span><span class="month">2024年6月</span></div>
+                <div class="activity-info"><h3>北京市集体海葬仪式</h3><p>由北京市殡葬管理处组织的免费集体海葬活动，庄重肃穆，让逝者回归大海。</p><div class="activity-meta"><span>📍 天津渤海湾海域</span><span>👥 限50个家庭</span><span>💰 免费</span><span>⏰ 上午9:00</span></div><button class="nav-cta" style="margin-top:10px;font-size:12px;" onclick="event.stopPropagation();navigateTo('booking')">立即报名</button></div>
+            </div>
+            <div class="activity-card" onclick="showActivityDetail('绿色缅怀·植树纪念公益活动')">
+                <div class="activity-date"><span class="day">22</span><span class="month">2024年6月</span></div>
+                <div class="activity-info"><h3>"绿色缅怀·植树纪念"公益活动</h3><p>在北京市长青园举行植树纪念活动，亲手种下一棵树，寄托对逝者的思念。</p><div class="activity-meta"><span>📍 北京长青园</span><span>👥 限100人</span><span>💰 免费</span><span>⏰ 下午14:00</span></div><button class="nav-cta" style="margin-top:10px;font-size:12px;" onclick="event.stopPropagation();navigateTo('booking')">立即报名</button></div>
+            </div>
+            <div class="activity-card" onclick="showActivityDetail('生态葬知识公益讲座')">
+                <div class="activity-date"><span class="day">05</span><span class="month">2024年7月</span></div>
+                <div class="activity-info"><h3>生态葬知识公益讲座</h3><p>邀请殡葬行业专家讲解生态葬政策、流程、补贴政策等内容，现场答疑解惑。</p><div class="activity-meta"><span>📍 上海静安区</span><span>👥 不限人数</span><span>💰 免费</span><span>⏰ 9:30-11:30</span></div><button class="nav-cta" style="margin-top:10px;font-size:12px;" onclick="event.stopPropagation();navigateTo('booking')">立即报名</button></div>
+            </div>
+            <div class="activity-card" onclick="showActivityDetail('广州市骨灰撒散纪念仪式')">
+                <div class="activity-date"><span class="day">12</span><span class="month">2024年7月</span></div>
+                <div class="activity-info"><h3>广州市骨灰撒散纪念仪式</h3><p>在广州白云山纪念林举行纪念仪式，以鲜花和诗歌缅怀逝者，倡导文明节俭新风。</p><div class="activity-meta"><span>📍 广州白云山</span><span>👥 限30个家庭</span><span>💰 免费</span><span>⏰ 上午10:00</span></div><button class="nav-cta" style="margin-top:10px;font-size:12px;" onclick="event.stopPropagation();navigateTo('booking')">立即报名</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="background:white;">
+        <div class="section-title"><h2>活动回顾</h2><p>往期公益活动精彩瞬间</p></div>
+        <div class="knowledge-grid">
+            <div class="knowledge-card" onclick="showActivityDetail('2024年春季集体海葬')">
+                <div class="knowledge-img" style="font-size:42px;">🌊</div>
+                <div class="knowledge-content"><h3>2024年春季集体海葬</h3><p>45个家庭参与，将亲人的骨灰撒入大海。活动在庄重的仪式中圆满完成。</p><p style="margin-top:6px;font-size:12px;color:var(--text-muted);">2024年3月20日 · 天津渤海湾</p></div>
+            </div>
+            <div class="knowledge-card" onclick="showActivityDetail('植树节纪念林活动')">
+                <div class="knowledge-img" style="font-size:42px;">🌳</div>
+                <div class="knowledge-content"><h3>植树节纪念林活动</h3><p>80余名市民参与植树纪念，共种植银杏、樱花等树木120余棵。</p><p style="margin-top:6px;font-size:12px;color:var(--text-muted);">2024年3月12日 · 北京长青园</p></div>
+            </div>
+            <div class="knowledge-card" onclick="showActivityDetail('清明鲜花祭扫倡导活动')">
+                <div class="knowledge-img" style="font-size:42px;">💐</div>
+                <div class="knowledge-content"><h3>清明鲜花祭扫倡导活动</h3><p>倡导文明祭扫，举办"一束鲜花祭亲人"主题活动，得到广泛响应。</p><p style="margin-top:6px;font-size:12px;color:var(--text-muted);">2024年4月4日 · 多城市同步</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div id="detailModal">
+    <div class="modal-content">
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+            <button onclick="closeModal()">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-brand">
+            <img src="images/logo.png" alt="中殡网">
+            <p>中殡网致力于提供专业、规范、温暖的殡葬服务，让每一次告别都充满尊重与关怀。</p>
+        </div>
+        <div class="footer-links">
+            <h4>服务项目</h4>
+            <ul>
+                <li><a onclick="navigateTo('map')">生态葬地图</a></li>
+                <li><a onclick="navigateTo('search')">服务查询</a></li>
+                <li><a onclick="navigateTo('booking')">预约咨询</a></li>
+                <li><a onclick="navigateTo('policy')">惠民政策</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>帮助中心</h4>
+            <ul>
+                <li><a onclick="navigateTo('knowledge')">生态葬知识</a></li>
+                <li><a onclick="navigateTo('partners')">合作陵园</a></li>
+                <li><a onclick="navigateTo('activities')">公益活动</a></li>
+                <li><a>常见问题</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>联系我们</h4>
+            <ul>
+                <li><a>客服热线：13236507829</a></li>
+                <li><a>服务时间：周一至周日 8:00-20:00</a></li>
+                <li><a>邮箱：service@zhongbinwang.com</a></li>
+                <li><a>地址：北京市朝阳区XXX路XX号</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 中殡网·殡葬服务平台 版权所有 | 京ICP备XXXXXXXX号-1</p>
+    </div>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// ===== NAVIGATION =====
+function navigateTo(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    var target = document.getElementById('page-' + page);
+    if (target) {
+        target.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+    document.querySelectorAll('.nav-links a').forEach(function(a) {
+        if (a.dataset.page === page) a.classList.add('active');
+        else a.classList.remove('active');
+    });
+    if (page === 'search') {
+        setTimeout(function() { showAllResults(); }, 80);
+    }
+}
+
+// ===== SEARCH DATA =====
+var searchData = [
+    { city: '北京', name: '北京市长青园骨灰林基地', types: ['树葬', '花坛葬'], price: '3,000-8,000元', subsidy: '补贴5,000元', rating: '4.8', desc: '北京市首家生态葬示范基地，环境优美，绿树成荫。', addr: '北京市朝阳区黑庄户乡' },
+    { city: '北京', name: '北京市八宝山革命公墓', types: ['草坪葬', '骨灰撒散'], price: '2,000-6,000元', subsidy: '补贴3,000元', rating: '4.7', desc: '庄严神圣，提供骨灰撒散、草坪葬服务。', addr: '北京市石景山区' },
+    { city: '北京', name: '北京海葬服务中心', types: ['海葬'], price: '免费', subsidy: '免费集体海葬', rating: '4.9', desc: '专业海葬服务机构，提供集体和个性海葬服务。', addr: '北京市海淀区四季青镇' },
+    { city: '上海', name: '上海福寿园海港陵园', types: ['花坛葬', '草坪葬'], price: '5,000-15,000元', subsidy: '补贴3,000元', rating: '4.9', desc: '花园式生态陵园，四季花开不断。', addr: '上海市浦东新区书院镇' },
+    { city: '上海', name: '上海滨海古园', types: ['树葬', '海葬'], price: '3,000-12,000元', subsidy: '补贴2,000-5,000元', rating: '4.6', desc: '浦东滨海区域知名陵园，提供树葬和海葬服务。', addr: '上海市浦东新区' },
+    { city: '广州', name: '广州市骨灰海葬服务中心', types: ['海葬'], price: '免费', subsidy: '免费服务', rating: '4.7', desc: '政府组织的免费集体海葬活动，每年定期举行。', addr: '广州市南沙区龙穴岛' },
+    { city: '广州', name: '广州市银河烈士陵园', types: ['花坛葬', '树葬'], price: '2,000-8,000元', subsidy: '补贴2,000元', rating: '4.5', desc: '历史悠久，提供多种生态安葬选择。', addr: '广州市天河区' },
+    { city: '深圳', name: '深圳市大鹏湾华侨公墓', types: ['草坪葬', '树葬'], price: '4,000-12,000元', subsidy: '补贴2,000元', rating: '4.6', desc: '依山傍海，风景秀丽。', addr: '深圳市盐田区梅沙街道' },
+    { city: '杭州', name: '杭州市南山陵园', types: ['树葬', '花坛葬', '壁葬'], price: '2,000-10,000元', subsidy: '补贴4,000元', rating: '4.8', desc: '西湖风景区内，环境优雅。', addr: '杭州市西湖区南山路' },
+    { city: '南京', name: '南京市雨花台功德园', types: ['花坛葬', '草坪葬'], price: '3,500-9,000元', subsidy: '补贴3,500元', rating: '4.5', desc: '历史悠久的现代陵园，交通便利。', addr: '南京市雨花台区' },
+    { city: '成都', name: '成都市磨盘山公墓生态葬区', types: ['树葬', '草坪葬'], price: '1,000-6,000元', subsidy: '补贴1,000-3,000元', rating: '4.4', desc: '成都市生态葬示范区域。', addr: '成都市成华区' },
+    { city: '武汉', name: '武汉市石门峰纪念公园', types: ['花坛葬', '壁葬', '树葬'], price: '2,000-8,000元', subsidy: '补贴1,000-2,000元', rating: '4.5', desc: '武汉知名陵园，生态葬服务多样。', addr: '武汉市洪山区' },
+];
+
+// ===== HERO SEARCH =====
+function searchFromHero() {
+    var input = document.getElementById('heroSearchInput');
+    var query = input.value.trim();
+    if (!query) {
+        alert('请输入城市名称、安葬方式或机构名称进行搜索');
+        return;
+    }
+    navigateTo('search');
+    setTimeout(function() {
+        var results = filterSearchData(query);
+        renderResults(results, query);
+    }, 120);
+}
+
+// ===== SEARCH PAGE =====
+function performSearch() {
+    var textQuery = '';
+    var inputEl = document.getElementById('searchPageInput');
+    if (inputEl) textQuery = inputEl.value.trim();
+    
+    var activeCity = document.querySelector('#filterCity .filter-chip.active');
+    var activeType = document.querySelector('#filterType .filter-chip.active');
+    var cityFilter = (activeCity && activeCity.dataset) ? (activeCity.dataset.value || '') : '';
+    var typeFilter = (activeType && activeType.dataset) ? (activeType.dataset.value || '') : '';
+    
+    var results = searchData.slice();
+    
+    if (textQuery) {
+        results = filterSearchData(textQuery, results);
+    }
+    if (cityFilter) {
+        results = results.filter(function(item) { return item.city === cityFilter; });
+    }
+    if (typeFilter) {
+        results = results.filter(function(item) {
+            return item.types.some(function(t) { return t.indexOf(typeFilter) !== -1; });
+        });
+    }
+    
+    renderResults(results, textQuery || cityFilter || typeFilter || '全部');
+}
+
+function filterSearchData(query, arr) {
+    arr = arr || searchData;
+    var q = query.toLowerCase();
+    return arr.filter(function(item) {
+        return item.city.indexOf(q) !== -1 ||
+               item.name.toLowerCase().indexOf(q) !== -1 ||
+               item.types.some(function(t) { return t.indexOf(q) !== -1; }) ||
+               item.desc.toLowerCase().indexOf(q) !== -1 ||
+               item.addr.toLowerCase().indexOf(q) !== -1;
+    });
+}
+
+function showAllResults() {
+    renderResults(searchData, '全部');
+}
+
+function renderResults(results, queryLabel) {
+    var container = document.getElementById('searchResults');
+    if (!container) return;
+    
+    if (results.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:60px 20px;"><div style="font-size:48px;margin-bottom:16px;">🔍</div><h3 style="color:var(--text);margin-bottom:8px;">未找到匹配结果</h3><p style="color:var(--text-light);">请尝试其他关键词或筛选条件</p><p style="color:var(--primary);margin-top:16px;cursor:pointer;text-decoration:underline;" onclick="showAllResults()">查看全部服务点</p></div>';
+        return;
+    }
+
+    var icons = { '海葬': '🌊', '树葬': '🌳', '花坛葬': '🌸', '草坪葬': '🌿', '骨灰撒散': '🍃', '壁葬': '🏔️' };
+    var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><h3>搜索结果 <span style="color:var(--primary);font-size:14px;">共 ' + results.length + ' 个服务点</span></h3><span style="color:var(--text-muted);font-size:13px;">筛选：' + queryLabel + '</span></div>';
+    html += '<div class="cemetery-grid">';
+    
+    results.forEach(function(item) {
+        var icon = icons[item.types[0]] || '🏔️';
+        var tags = item.types.map(function(t) { return '<span class="result-tag">' + t + '</span>'; }).join(' ');
+        html += '<div class="cemetery-card" onclick="showCemeteryDetail(\'' + item.name.replace(/'/g, "\\'") + '\')">';
+        html += '<div class="cemetery-img">' + icon + '</div>';
+        html += '<div class="cemetery-info">';
+        html += '<h3>' + item.name + '</h3>';
+        html += '<p class="location">📍 ' + item.addr + ' | ' + item.types.join('、') + '</p>';
+        html += '<p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">' + item.desc + '</p>';
+        html += '<div class="result-tags">' + tags + ' <span class="result-tag subsidy">' + item.subsidy + '</span></div>';
+        html += '<div class="cemetery-meta" style="margin-top:10px;"><span>💰 ' + item.price + '</span><span>⭐ ' + item.rating + '分</span></div>';
+        html += '</div></div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ===== FILTER CHIPS =====
+(function() {
+    document.querySelectorAll('.filter-options').forEach(function(group) {
+        group.querySelectorAll('.filter-chip').forEach(function(chip) {
+            chip.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+                this.classList.add('active');
+                if (document.getElementById('page-search').classList.contains('active')) {
+                    performSearch();
+                }
+            });
+        });
+    });
+})();
+
+// ===== MAP FILTER =====
+function filterMap() {
+    var city = document.getElementById('mapCity').value;
+    var type = document.getElementById('mapType').value;
+    if (city || type) {
+        var q = [city || '', type || ''].join(' ').trim();
+        if (q) {
+            navigateTo('search');
+            setTimeout(function() {
+                var results = filterSearchData(q);
+                renderResults(results, q);
+            }, 120);
+            return;
+        }
+    }
+    alert('请至少选择一个筛选条件');
+}
+
+function resetMap() {
+    document.getElementById('mapCity').value = '';
+    document.getElementById('mapType').value = '';
+    document.getElementById('mapSubsidy').value = '';
+}
+
+// ===== BOOKING =====
+function submitBooking(e) {
+    e.preventDefault();
+    alert('预约申请已提交！\n\n白管家将在24小时内与您联系，为您提供一对一咨询服务。\n\n感谢您的信任！');
+}
+
+// ===== MODAL =====
+function openModal(html) {
+    var modal = document.getElementById('detailModal');
+    document.getElementById('modalBody').innerHTML = html;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('detailModal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Close modal by clicking backdrop
+document.getElementById('detailModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// ===== DETAIL DATA =====
+var knowledgeDetails = {
+    '树葬': { icon: '🌳', title: '树葬 · 详细科普', sections: [
+        { h: '📖 什么是树葬', p: '树葬是将骨灰深埋于树下，不立碑或仅立小型卧碑的一种生态安葬方式。每棵树对应一位逝者，树下可安放骨灰坛。树木随着时间生长，象征着生命的延续与升华。' },
+        { h: '💰 费用参考', p: '普通树葬：2,000-6,000元<br>精品树葬：6,000-15,000元<br>各地政府补贴后实际费用通常降低50%以上' },
+        { h: '✅ 适用人群', p: '崇尚自然、热爱环保的家庭；希望以简朴方式送别逝者的家庭；符合政府生态葬补贴条件的本地户籍居民。' },
+        { h: '📋 办理流程', p: '1. 选择合作陵园树葬区 → 2. 选定树种和位置 → 3. 签订服务协议 → 4. 安葬仪式 → 5. 后续祭扫可选择鲜花或网上纪念' },
+        { h: '🌟 特色优势', p: '<span class="modal-tag green">节地环保</span> <span class="modal-tag green">价格经济</span> <span class="modal-tag green">生命延续</span> <span class="modal-tag green">政府补贴</span>' }
+    ]},
+    '花坛葬': { icon: '🌸', title: '花坛葬 · 详细科普', sections: [
+        { h: '📖 什么是花坛葬', p: '花坛葬是将骨灰安葬于花坛之下的生态安葬方式。花坛中种植四季花卉，每个安葬位以小型标识或二维码标记。花坛葬环境优美，越来越受到年轻一代的青睐。' },
+        { h: '💰 费用参考', p: '普通花坛葬：3,000-8,000元<br>精品花坛葬：8,000-18,000元<br>政府补贴后：部分地区可免费' },
+        { h: '✅ 适用人群', p: '喜爱花卉、追求美感的家庭；希望安葬环境温馨雅致的家庭；预算中等、希望有纪念标识的家庭。' },
+        { h: '📋 办理流程', p: '1. 选定花坛区域 → 2. 选择花卉种类 → 3. 签订协议 → 4. 安葬仪式 → 5. 周年可更换鲜花纪念' },
+        { h: '🌟 特色优势', p: '<span class="modal-tag blue">美观雅致</span> <span class="modal-tag blue">四季有花</span> <span class="modal-tag blue">诗意告别</span> <span class="modal-tag blue">维护省心</span>' }
+    ]},
+    '草坪葬': { icon: '🌿', title: '草坪葬 · 详细科普', sections: [
+        { h: '📖 什么是草坪葬', p: '草坪葬是将骨灰埋入草坪之下，地面铺设卧碑或不留标记的安葬方式。草坪葬与绿地融为一体，视野开阔，环境宁静，既体现"入土为安"的传统理念，又符合现代节地生态要求。' },
+        { h: '💰 费用参考', p: '普通草坪葬：2,500-7,000元<br>精品草坪葬：7,000-16,000元<br>政府补贴后：1,000-5,000元不等' },
+        { h: '✅ 适用人群', p: '希望保持传统"入土为安"观念的家庭；喜欢开阔自然环境的家庭；预算经济、追求实用的家庭。' },
+        { h: '📋 办理流程', p: '1. 选择草坪葬区 → 2. 确定碑文样式（卧碑）→ 3. 签订协议 → 4. 安葬 → 5. 日常可在草坪边献花缅怀' },
+        { h: '🌟 特色优势', p: '<span class="modal-tag green">宁静开阔</span> <span class="modal-tag green">传统融合</span> <span class="modal-tag green">价格适中</span> <span class="modal-tag green">便于祭扫</span>' }
+    ]},
+    '海葬': { icon: '🌊', title: '海葬 · 详细科普', sections: [
+        { h: '📖 什么是海葬', p: '海葬是将骨灰撒入大海的一种彻底节地的生态安葬方式。海葬有政府统一组织的集体海葬和个性化海葬两种形式。集体海葬通常免费，个性化海葬需付费。' },
+        { h: '💰 费用参考', p: '政府集体海葬：免费（需符合条件的户籍居民）<br>个性化海葬：5,000-20,000元<br>私人包船海葬：20,000元以上' },
+        { h: '✅ 适用人群', p: '热爱大海、向往自由的家庭；希望彻底节地、不留墓位的家庭；符合政府免费海葬条件的本地户籍居民。' },
+        { h: '📋 办理流程', p: '1. 向民政部门或指定机构报名 → 2. 提交材料 → 3. 等待批次通知 → 4. 参加海上告别仪式 → 5. 骨灰撒海，发放纪念证书' },
+        { h: '🌟 特色优势', p: '<span class="modal-tag blue">彻底节地</span> <span class="modal-tag blue">政府免费</span> <span class="modal-tag blue">浪漫诗意</span> <span class="modal-tag blue">永恒纪念</span>' }
+    ]},
+    '骨灰撒散': { icon: '🍃', title: '骨灰撒散 · 详细科普', sections: [
+        { h: '📖 什么是骨灰撒散', p: '骨灰撒散是在指定区域（如纪念林、草原、山川等）将骨灰自然撒散的安葬方式。这种方式最简朴、最环保，完全不占地，不设立任何标记。' },
+        { h: '💰 费用参考', p: '指定区域撒散：免费-3,000元<br>纪念林撒散：政府通常免费组织<br>部分地区完全免费' },
+        { h: '✅ 适用人群', p: '崇尚简朴、淡泊名利的逝者；家属认同"回归自然"理念；希望节省丧葬费用的家庭。' },
+        { h: '📋 办理流程', p: '1. 向民政部门申请 → 2. 选择撒散区域 → 3. 约定时间 → 4. 举行简约告别仪式 → 5. 可领取纪念证书或网上建立纪念空间' },
+        { h: '🌟 特色优势', p: '<span class="modal-tag purple">简朴自然</span> <span class="modal-tag purple">完全免费</span> <span class="modal-tag purple">回归本真</span> <span class="modal-tag purple">无后顾之忧</span>' }
+    ]},
+    '壁葬': { icon: '🏔️', title: '壁葬 · 详细科普', sections: [
+        { h: '📖 什么是壁葬', p: '壁葬是将骨灰安放于墙壁格位中的一种节地安葬方式。壁葬墙壁通常建于陵园围墙或专门建筑内，每个格位有独立的小门和碑文。空间利用率极高。' },
+        { h: '💰 费用参考', p: '普通壁葬：3,000-10,000元<br>精品壁葬：10,000-25,000元<br>政府补贴后：2,000-8,000元不等' },
+        { h: '✅ 适用人群', p: '城市户籍居民；希望有固定祭扫地点的家庭；预算有限但希望有碑文纪念的家庭。' },
+        { h: '📋 办理流程', p: '1. 选择壁葬墙壁和格位 → 2. 确定碑文内容 → 3. 签订协议并付款 → 4. 安葬仪式 → 5. 后续可随时前往祭扫' },
+        { h: '🌟 特色优势', p: '<span class="modal-tag orange">空间高效</span> <span class="modal-tag orange">便于祭扫</span> <span class="modal-tag orange">有碑可寻</span> <span class="modal-tag orange">城市适宜</span>' }
+    ]}
+};
+
+var cemeteryDetails = {
+    '北京市长青园骨灰林基地': { addr: '📍 北京市朝阳区黑庄户乡大鲁店村南', phone: '📞 13236507829', rating: '4.8', reviews: '126', price: '3,000-8,000元', subsidy: '政府补贴5,000元', types: ['树葬', '花坛葬'], status: '已合作', desc: '北京市首家生态葬示范基地，园区占地500余亩，种植各类树木数万株。环境优美，绿树成荫，是北京市生态葬的标杆性机构。', process: '预约 → 现场考察 → 选定位置 → 签订协议 → 安葬仪式 → 后续祭扫服务' },
+    '北京市八宝山革命公墓': { addr: '📍 北京市石景山区八宝山', phone: '📞 13236507829', rating: '4.7', reviews: '92', price: '2,000-6,000元', subsidy: '政府补贴3,000元', types: ['草坪葬', '骨灰撒散'], status: '已合作', desc: '庄严神圣的纪念公墓，提供骨灰撒散、草坪葬等多种生态安葬服务，环境宁静。', process: '预约咨询 → 选定安葬方式 → 签订协议 → 安葬仪式 → 后续维护' },
+    '北京海葬服务中心': { addr: '📍 北京市海淀区四季青镇', phone: '📞 13236507829', rating: '4.9', reviews: '210', price: '免费', subsidy: '免费集体海葬', types: ['海葬'], status: '公益推荐', desc: '专业海葬服务机构，提供集体海葬和个性化海葬服务。由北京市殡葬管理处指导，庄重规范。', process: '报名登记 → 材料审核 → 批次安排 → 海上告别仪式 → 骨灰撒海 → 发放纪念证书' },
+    '上海福寿园海港陵园': { addr: '📍 上海市浦东新区书院镇', phone: '📞 13236507829', rating: '4.9', reviews: '98', price: '5,000-15,000元', subsidy: '政府补贴3,000元', types: ['花坛葬', '草坪葬'], status: '已合作', desc: '上海知名的花园式陵园，融合中西园林设计理念，四季花开不断。提供个性化生态葬服务方案。', process: '预约咨询 → 园区参观 → 方案定制 → 签订协议 → 安葬仪式 → 周年纪念服务' },
+    '广州市骨灰海葬服务中心': { addr: '📍 广州市南沙区龙穴岛', phone: '📞 13236507829', rating: '4.7', reviews: '156', price: '免费', subsidy: '政府免费服务', types: ['海葬'], status: '公益推荐', desc: '广州市民政局直属海葬服务机构，每年组织多批次集体海葬活动，深受市民信赖。', process: '报名登记 → 材料审核 → 批次安排 → 海上告别仪式 → 骨灰撒海 → 发放纪念证书' },
+    '深圳市大鹏湾华侨公墓': { addr: '📍 深圳市盐田区梅沙街道', phone: '📞 13236507829', rating: '4.6', reviews: '87', price: '4,000-12,000元', subsidy: '政府补贴2,000元', types: ['草坪葬', '树葬'], status: '已合作', desc: '依山傍海，风景秀丽，是深圳唯一的临海生态陵园。提供多种节地生态安葬选择。', process: '预约 → 现场考察 → 选定墓位 → 签订协议 → 安葬 → 后续维护' },
+    '杭州市南山陵园': { addr: '📍 杭州市西湖区南山路', phone: '📞 13236507829', rating: '4.8', reviews: '112', price: '2,000-10,000元', subsidy: '政府补贴4,000元', types: ['树葬', '花坛葬', '壁葬'], status: '已合作', desc: '位于西湖风景区内，环境优雅，融合江南园林特色。是杭州市生态葬服务的示范单位。', process: '预约咨询 → 选择葬式 → 签订协议 → 安葬仪式 → 西湖祭扫' },
+    '南京市雨花台功德园': { addr: '📍 南京市雨花台区雨花西路', phone: '📞 13236507829', rating: '4.5', reviews: '76', price: '3,500-9,000元', subsidy: '政府补贴3,500元', types: ['花坛葬', '草坪葬'], status: '已合作', desc: '历史悠久的陵园，位于雨花台风景区附近，交通便利。提供现代生态葬服务。', process: '预约 → 现场参观 → 选定方式 → 签订协议 → 安葬 → 定期维护' }
+};
+
+var activityDetails = {
+    '北京市集体海葬仪式': { date: '2024年6月15日 上午9:00', loc: '天津渤海湾海域（集合：北京市朝阳区西大望路8号）', quota: '限50个家庭', fee: '免费', desc: '由北京市殡葬管理处组织，至今已成功举办30余届。包括：集体默哀、鲜花送别、骨灰撒海、发放纪念证书等环节。', notice: '请携带：逝者火化证明、户籍证明、经办人身份证；7:30前到达集合点；建议穿着素色服装。' },
+    '绿色缅怀·植树纪念公益活动': { date: '2024年6月22日 下午14:00', loc: '北京市朝阳区长青园骨灰林基地', quota: '限100人', fee: '免费', desc: '在长青园举行植树纪念活动，亲手种下一棵树，寄托对逝者的思念。包括植树体验、鲜花缅怀、诗歌朗诵等环节。', notice: '请穿着便于活动的休闲服装；植树工具由主办方提供；建议提前30分钟签到。' },
+    '生态葬知识公益讲座': { date: '2024年7月5日 上午9:30-11:30', loc: '上海市静安区社区服务中心3楼多功能厅', quota: '不限人数', fee: '免费', desc: '邀请殡葬行业专家讲解生态葬政策、各类生态葬方式区别、补贴政策申请流程。现场设有答疑环节。', notice: '无需报名，直接前往参加；建议提前15分钟入场；讲座资料免费发放。' },
+    '广州市骨灰撒散纪念仪式': { date: '2024年7月12日 上午10:00', loc: '广州市白云区白云山纪念林', quota: '限30个家庭', fee: '免费', desc: '在白云山纪念林举行纪念仪式，以鲜花和诗歌缅怀逝者，倡导文明节俭的殡葬新风。', notice: '请携带逝者相关证明；建议穿着素色服装；可自备鲜花；活动结束后可在纪念林植树留念。' },
+    '2024年春季集体海葬': { date: '2024年3月20日（已结束）', loc: '天津渤海湾海域', quota: '45个家庭参与', fee: '免费', desc: '2024年春季集体海葬活动圆满完成。45个家庭参与，将亲人骨灰撒入大海。活动在庄重仪式中完成，得到一致好评。', notice: '本活动已结束。如需参加后续批次，请点击"预约咨询"报名。' },
+    '植树节纪念林活动': { date: '2024年3月12日（已结束）', loc: '北京市朝阳区长青园', quota: '80余人参与', fee: '免费', desc: '植树节当天，80余名市民参与植树纪念活动，共种植银杏、樱花等树木120余棵。', notice: '本活动已结束。每年植树节均会举办类似活动，敬请关注。' },
+    '清明鲜花祭扫倡导活动': { date: '2024年4月4日（已结束）', loc: '多个城市同步举行', quota: '不限人数', fee: '免费', desc: '倡导文明祭扫，用鲜花代替纸钱，举办"一束鲜花祭亲人"主题活动，得到广泛响应。', notice: '本活动已结束。每年清明期间均会举办文明祭扫倡导活动。' }
+};
+
+// ===== POLICY DATA =====
+var policyData = {
+    '北京市': { sub: '树葬/花坛葬/草坪葬：5,000元；海葬：免费+2,000元补贴', org: '北京市民政局殡葬管理处', phone: '13236507829', doc: '京民殡发〔2017〕XX号', condition: '具有北京市户籍的居民；选择经民政部门认定的节地生态安葬方式；在指定陵园办理。' },
+    '上海市': { sub: '海葬：免费+补贴3,000元；其他生态葬：补贴2,000-5,000元', org: '上海市民政局', phone: '13236507829', doc: '沪民殡发〔2020〕XX号', condition: '具有上海市户籍的居民；参加政府组织的海葬活动或选择指定陵园生态葬。' },
+    '广州市': { sub: '海葬/树葬：补贴2,000元；其他生态葬：补贴1,000-3,000元', org: '广州市民政局', phone: '13236507829', doc: '穗民规字〔2019〕XX号', condition: '具有广州市户籍的居民；在指定机构选择生态葬方式。' },
+    '深圳市': { sub: '花坛葬/草坪葬/树葬：补贴3,000元', org: '深圳市民政局', phone: '13236507829', doc: '深民〔2021〕XX号', condition: '具有深圳市户籍的居民；在指定陵园选择生态葬。' },
+    '杭州市': { sub: '生态葬（各类）：补贴2,000-5,000元', org: '杭州市民政局', phone: '13236507829', doc: '杭民发〔2018〕XX号', condition: '具有杭州市户籍的居民；根据安葬方式不同补贴金额不同。' },
+    '南京市': { sub: '花坛葬/草坪葬/壁葬：补贴1,500元', org: '南京市民政局', phone: '13236507829', doc: '宁民殡〔2020〕XX号', condition: '具有南京市户籍的居民；在指定机构办理生态葬。' },
+    '成都市': { sub: '树葬/花坛葬/草坪葬：补贴1,000-3,000元', org: '成都市民政局', phone: '13236507829', doc: '成民发〔2019〕XX号', condition: '具有成都市户籍的居民；选择节地生态安葬方式。' },
+    '武汉市': { sub: '生态葬（各类）：补贴1,000-2,000元', org: '武汉市民政局', phone: '13236507829', doc: '武民政〔2020〕XX号', condition: '具有武汉市户籍的居民；在指定陵园办理。' },
+};
+
+// ===== DETAIL SHOW FUNCTIONS =====
+function showKnowledgeDetail(name) {
+    var d = knowledgeDetails[name];
+    if (!d) return;
+    var html = '<div style="text-align:center;margin-bottom:24px;"><div style="font-size:48px;margin-bottom:10px;">' + d.icon + '</div><h2 style="color:var(--primary-dark);font-size:24px;">' + d.title + '</h2></div>';
+    d.sections.forEach(function(s) {
+        html += '<div class="modal-section"><h4>' + s.h + '</h4><p>' + s.p + '</p></div>';
+    });
+    html += '<div style="text-align:center;margin-top:20px;"><button class="modal-contact-btn" onclick="closeModal();setTimeout(function(){navigateTo(\'booking\')},200);">立即预约咨询</button></div>';
+    openModal(html);
+}
+
+function showCemeteryDetail(name) {
+    var d = cemeteryDetails[name];
+    if (!d) return;
+    var tags = d.types.map(function(t) { return '<span class="modal-tag green">' + t + '</span>'; }).join(' ');
+    var sc = d.status === '公益推荐' ? 'orange' : 'blue';
+    var html = '';
+    html += '<div style="margin-bottom:20px;"><h2 style="color:var(--primary-dark);font-size:22px;">' + name + '</h2>';
+    html += '<div style="font-size:13px;color:var(--text-muted);">⭐ ' + d.rating + '分 · ' + d.reviews + '条评价</div></div>';
+    html += '<div style="margin-bottom:12px;">' + tags + ' <span class="modal-tag ' + sc + '">' + d.status + '</span></div>';
+    html += '<div class="modal-section"><h4>📍 地址</h4><p>' + d.addr + '</p></div>';
+    html += '<div class="modal-section"><h4>📞 联系电话</h4><p style="font-size:18px;font-weight:600;color:var(--primary);">' + d.phone + '</p></div>';
+    html += '<div class="modal-section"><h4>💰 参考价格</h4><p class="modal-price">' + d.price + '</p>';
+    html += '<p style="margin-top:6px;"><span class="modal-tag orange">' + d.subsidy + '</span></p></div>';
+    html += '<div class="modal-section"><h4>📖 机构介绍</h4><p>' + d.desc + '</p></div>';
+    html += '<div class="modal-section"><h4>📋 办理流程</h4><p>' + d.process + '</p></div>';
+    html += '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;">';
+    html += '<button class="modal-contact-btn" onclick="closeModal();setTimeout(function(){navigateTo(\'booking\')},200);">预约咨询</button>';
+    html += '<a href="tel:13236507829" class="modal-contact-btn" style="background:var(--accent);color:var(--primary-dark);">📞 拨打电话</a></div>';
+    openModal(html);
+}
+
+function showActivityDetail(name) {
+    var d = activityDetails[name];
+    if (!d) return;
+    var html = '<div style="margin-bottom:20px;"><h2 style="color:var(--primary-dark);font-size:22px;">' + name + '</h2></div>';
+    html += '<div class="modal-section"><h4>📅 活动时间</h4><p>' + d.date + '</p></div>';
+    html += '<div class="modal-section"><h4>📍 活动地点</h4><p>' + d.loc + '</p></div>';
+    html += '<div class="modal-section"><h4>👥 参与名额</h4><p>' + d.quota + '</p></div>';
+    html += '<div class="modal-section"><h4>💰 活动费用</h4><p class="modal-price">' + d.fee + '</p></div>';
+    html += '<div class="modal-section"><h4>📖 活动详情</h4><p>' + d.desc + '</p></div>';
+    html += '<div class="modal-section"><h4>📝 注意事项</h4><p>' + d.notice + '</p></div>';
+    html += '<div style="margin-top:20px;"><button class="modal-contact-btn" onclick="closeModal();setTimeout(function(){navigateTo(\'booking\')},200);">立即报名参加</button></div>';
+    openModal(html);
+}
+
+function showPolicyDetail(city) {
+    var d = policyData[city];
+    if (!d) return;
+    var html = '<div style="margin-bottom:20px;"><h2 style="color:var(--primary-dark);font-size:22px;">📋 ' + city + '生态葬补贴政策详情</h2></div>';
+    html += '<div class="modal-section"><h4>💰 补贴标准</h4><p style="font-size:18px;font-weight:600;color:var(--primary);">' + d.sub + '</p></div>';
+    html += '<div class="modal-section"><h4>🏢 主管单位</h4><p>' + d.org + '</p></div>';
+    html += '<div class="modal-section"><h4>📞 咨询电话</h4><p style="font-size:18px;font-weight:600;color:var(--primary);">📞 ' + d.phone + '</p></div>';
+    html += '<div class="modal-section"><h4>📄 政策依据</h4><p>' + d.doc + '</p></div>';
+    html += '<div class="modal-section"><h4>✅ 申请条件</h4><p>' + d.condition + '</p></div>';
+    html += '<div class="modal-section"><h4>📋 申请材料</h4><p>1. 逝者身份证明（身份证/户口簿）<br>2. 逝者死亡证明/火化证明<br>3. 经办人身份证明<br>4. 安葬协议或证明<br>5. 银行账户信息（用于接收补贴）</p></div>';
+    html += '<div style="margin-top:20px;"><button class="modal-contact-btn" onclick="closeModal();setTimeout(function(){navigateTo(\'booking\')},200);">预约咨询补贴申请</button></div>';
+    openModal(html);
+}
+
+// ===== ANIMATIONS =====
+function animateNumber(id, target) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var current = 0;
+    var increment = target / 50;
+    var timer = setInterval(function() {
+        current += increment;
+        if (current >= target) {
+            el.textContent = target.toLocaleString();
+            clearInterval(timer);
+        } else {
+            el.textContent = Math.floor(current).toLocaleString();
+        }
+    }, 30);
+}
+
+setTimeout(function() {
+    animateNumber('statCities', 186);
+    animateNumber('statServices', 2847);
+    animateNumber('statPartners', 156);
+    animateNumber('statFamilies', 12580);
+}, 500);
+</script>
+
+</body>
+</html>
